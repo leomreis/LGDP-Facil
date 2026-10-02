@@ -1,0 +1,23 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+ 
+# Ambiente / segredos
+.env
+.env.local
+*.env
+ 
+# Node / Frontend
+node_modules/
+dist/
+build/
+ 
+# Editor / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

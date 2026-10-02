@@ -1,0 +1,32 @@
+[project]
+name = "compliance-lgpd-backend"
+version = "0.1.0"
+description = "Backend do compliance LGPD para PME"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+exclude = ["alembic"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = []
+
+[tool.ruff.lint.flake8-bugbear]
+# Depends/Security no default do argumento é o padrão do FastAPI para injeção de
+# dependência, não o bug de default mutável que a regra B008 procura.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Security"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.pyright]
+include = ["app"]
+exclude = ["venv", "tests"]
+pythonVersion = "3.10"
+typeCheckingMode = "basic"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
