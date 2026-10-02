@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.api.companies import router as companies_router
 from app.api.onboarding import router as onboarding_router
 from app.api.policy_documents import router as policy_documents_router
+from app.api.public import router as public_router
 from app.api.reports import router as reports_router
 from app.api.scans import router as scans_router
 from app.api.team import router as team_router
@@ -37,6 +38,7 @@ app.add_middleware(
 app.include_router(companies_router)
 app.include_router(onboarding_router)
 app.include_router(policy_documents_router)
+app.include_router(public_router)
 app.include_router(scans_router)
 app.include_router(reports_router)
 app.include_router(users_router)

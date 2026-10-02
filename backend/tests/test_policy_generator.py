@@ -83,9 +83,32 @@ class TestBuildPolicyPrompt:
         assert "Padaria LTDA" in prompt
         assert "https://padaria.com" in prompt
 
-    def test_tipo_nao_suportado_falha_alto(self):
-        with pytest.raises(ValueError, match="terms_of_use"):
-            build_policy_prompt(PolicyDocumentType.TERMS_OF_USE, "X", "https://x.com", [])
+    def test_todo_tipo_de_documento_tem_prompt(self):
+        """Um tipo novo no enum sem prompt correspondente só seria descoberto
+        quando um cliente clicasse em "gerar" — melhor quebrar aqui."""
+        for tipo in PolicyDocumentType:
+            assert build_policy_prompt(tipo, "X", "https://x.com", [])
+
+    def test_terms_of_use_inclui_apenas_achados_de_formulario(self):
+        achados = [
+            FindingFalso(
+                FindingType.FORM,
+                location="https://x.com > formulário > campo 'email'",
+            ),
+            FindingFalso(
+                FindingType.THIRD_PARTY_SCRIPT,
+                categoria_dado_pessoal=CategoryType.other,
+                location="https://x.com > script 'googletagmanager.com'",
+            ),
+        ]
+
+        prompt = build_policy_prompt(
+            PolicyDocumentType.TERMS_OF_USE, "Padaria LTDA", "https://x.com", achados
+        )
+
+        assert "Termos de Uso" in prompt
+        assert "campo 'email'" in prompt
+        assert "googletagmanager" not in prompt
 
 
 class TestGeneratePolicyContent:

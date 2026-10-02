@@ -97,3 +97,11 @@ export interface TeamInviteCreate {
   email: string;
   name: string;
 }
+
+export interface PublicPolicyDocument {
+  company_name: string;
+  tipo: PolicyDocumentType;
+  version: string;
+  content: string;
+  created_at: string | null;
+}

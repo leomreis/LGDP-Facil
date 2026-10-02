@@ -1,4 +1,4 @@
-"""Geração assistida de política de privacidade e aviso de cookies.
+"""Geração assistida de política de privacidade, termos de uso e aviso de cookies.
 
 Mesma regra do relatório executivo: o conteúdo vem estritamente dos achados já
 classificados deterministicamente — a IA não decide o que a empresa coleta, só
@@ -16,6 +16,7 @@ PROMPTS_DIR = Path(__file__).parent / "prompts"
 PROMPT_BY_TYPE: dict[PolicyDocumentType, str] = {
     PolicyDocumentType.PRIVACY_POLICY: "politica_privacidade.md",
     PolicyDocumentType.COOKIE_NOTICE: "aviso_cookies.md",
+    PolicyDocumentType.TERMS_OF_USE: "termos_uso.md",
 }
 
 
@@ -27,8 +28,9 @@ def _format_findings_for_policy(findings, tipo: PolicyDocumentType) -> str:
     """Filtra os achados relevantes para o tipo de documento.
 
     O aviso de cookies só precisa saber de cookies/scripts; a política de
-    privacidade só precisa saber de dado pessoal coletado via formulário —
-    incluir achado irrelevante confundiria a IA sobre o que o documento cobre.
+    privacidade e os termos de uso só precisam saber de dado pessoal coletado
+    via formulário — incluir achado irrelevante confundiria a IA sobre o que o
+    documento cobre.
     """
     if tipo is PolicyDocumentType.COOKIE_NOTICE:
         tipos_relevantes = (FindingType.COOKIES, FindingType.THIRD_PARTY_SCRIPT)

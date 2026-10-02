@@ -30,5 +30,16 @@ class PolicyDocumentResponse(BaseModel):
         from_attributes = True
 
 
+class PublicPolicyDocumentResponse(BaseModel):
+    """O que a página pública mostra — sem id, company_id nem status: o
+    visitante do site da empresa não precisa (nem deve) ver dado interno."""
+
+    company_name: str
+    tipo: PolicyDocumentType
+    version: str
+    content: str
+    created_at: datetime | None = None
+
+
 class PolicyDocumentPublish(BaseModel):
     status: PolicyDocumentStatus

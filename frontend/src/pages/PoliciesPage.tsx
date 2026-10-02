@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { listPolicyDocuments, updatePolicyDocumentStatus } from '../api/policyDocuments';
-import type { PolicyDocument } from '../types/api';
+import { publicPolicyUrl } from '../api/publicPolicies';
+import type { PolicyDocument, PolicyDocumentType } from '../types/api';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 
@@ -9,6 +10,31 @@ const TIPO_LABEL: Record<PolicyDocument['tipo'], string> = {
   terms_of_use: 'Termos de Uso',
   cookie_notice: 'Aviso de Cookies',
 };
+
+/** O link sempre aponta para a versão publicada mais recente do tipo — não
+ * para este documento específico —, então o rodapé do site da empresa não
+ * precisa mudar quando uma versão nova é publicada. */
+function LinkPublico({ companyId, tipo }: { companyId: string; tipo: PolicyDocumentType }) {
+  const url = publicPolicyUrl(companyId, tipo);
+  const [copiado, setCopiado] = useState(false);
+
+  async function copiar() {
+    await navigator.clipboard.writeText(url);
+    setCopiado(true);
+  }
+
+  return (
+    <div className="mb-4 flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm">
+      <span className="text-text-muted">Link público:</span>
+      <a href={url} target="_blank" rel="noreferrer" className="flex-1 truncate text-primary">
+        {url}
+      </a>
+      <Button variant="secondary" type="button" onClick={() => void copiar()}>
+        {copiado ? 'Copiado' : 'Copiar'}
+      </Button>
+    </div>
+  );
+}
 
 export function PoliciesPage() {
   const [documentos, setDocumentos] = useState<PolicyDocument[] | null>(null);
@@ -27,7 +53,7 @@ export function PoliciesPage() {
 
   async function publicar(documento: PolicyDocument) {
     try {
-      await updatePolicyDocumentStatus(documento.id, 'published');
+      setSelecionado(await updatePolicyDocumentStatus(documento.id, 'published'));
       await carregar();
     } catch (e) {
       setErro(e instanceof Error ? e.message : 'Não foi possível publicar o documento.');
@@ -80,6 +106,9 @@ export function PoliciesPage() {
                 </Button>
               )}
             </header>
+            {selecionado.status === 'published' && (
+              <LinkPublico companyId={selecionado.company_id} tipo={selecionado.tipo} />
+            )}
             <pre className="whitespace-pre-wrap font-sans leading-relaxed text-text">
               {selecionado.content}
             </pre>

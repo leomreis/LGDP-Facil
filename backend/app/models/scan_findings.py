@@ -37,11 +37,12 @@ class ScanFinding(Base):
     scan_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("scans.id"), nullable=False
     )
-    finding_type: Mapped[FindingType] = mapped_column(
-        SQLEnum(FindingType), nullable=False, default=FindingType.FORM
-    )
+    # Sem default de propósito: um achado sem tipo/categoria/risco explícitos é
+    # bug do scanner, e deve falhar no insert em vez de virar silenciosamente
+    # "CPF" (o default antigo) e inflar o risco do relatório.
+    finding_type: Mapped[FindingType] = mapped_column(SQLEnum(FindingType), nullable=False)
     categoria_dado_pessoal: Mapped[CategoryType] = mapped_column(
-        SQLEnum(CategoryType), nullable=False, default=CategoryType.cpf
+        SQLEnum(CategoryType), nullable=False
     )
-    risk: Mapped[RiskType] = mapped_column(SQLEnum(RiskType), nullable=False, default=RiskType.low)
+    risk: Mapped[RiskType] = mapped_column(SQLEnum(RiskType), nullable=False)
     location: Mapped[str] = mapped_column(String, nullable=False)

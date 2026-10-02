@@ -12,6 +12,7 @@ import { ScansListPage } from './pages/ScansListPage';
 import { ScanDetailPage } from './pages/ScanDetailPage';
 import { PoliciesPage } from './pages/PoliciesPage';
 import { TeamPage } from './pages/TeamPage';
+import { PublicPolicyPage } from './pages/PublicPolicyPage';
 
 export function App() {
   return (
@@ -21,6 +22,7 @@ export function App() {
         <Route path="/cadastro" element={<SignUpPage />} />
         <Route path="/esqueci-senha" element={<ForgotPasswordPage />} />
         <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
+        <Route path="/p/:companyId/:slug" element={<PublicPolicyPage />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/onboarding" element={<OnboardingPage />} />

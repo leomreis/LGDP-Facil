@@ -130,6 +130,14 @@ export function ScanDetailPage() {
             >
               {gerandoDocumento === 'cookie_notice' ? 'Gerando...' : 'Gerar aviso de cookies'}
             </Button>
+            <Button
+              variant="secondary"
+              type="button"
+              disabled={gerandoDocumento !== null}
+              onClick={() => void gerarDocumento('terms_of_use')}
+            >
+              {gerandoDocumento === 'terms_of_use' ? 'Gerando...' : 'Gerar termos de uso'}
+            </Button>
           </div>
         </section>
       )}
